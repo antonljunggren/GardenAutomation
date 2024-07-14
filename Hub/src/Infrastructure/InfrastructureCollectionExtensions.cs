@@ -12,6 +12,9 @@ using Core.Sensors;
 using Core.Devices.ControlDevices;
 using Core.Shared.CAN;
 using Infrastructure.BackgroundServices;
+using Core.Shared;
+using Infrastructure.Shared;
+using Core.Telemetry;
 
 namespace Infrastructure
 {
@@ -27,6 +30,8 @@ namespace Infrastructure
             services.AddSingleton<CanHandler, CanHandlerImplmentation>();
             services.AddSingleton<ISensorRepository, SensorRepository>();
             services.AddSingleton<IControlDeviceRepository, ControlDeviceRepository>();
+            services.AddSingleton<ISystemRepository, SystemRepository>();
+            services.AddSingleton<ITelemetryService, TelemetryService>();
             return services;
         }
 
