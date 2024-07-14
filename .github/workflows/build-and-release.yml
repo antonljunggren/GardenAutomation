@@ -1,0 +1,83 @@
+name: Build and Release
+
+on:
+    push:
+        branches:
+            - master
+        tags:
+            - 'v*.*.*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+        
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '20'
+            
+            - name: Install npm dependencies
+              working-directory: Hub/src/WebAPI/Client
+              run: npm install
+
+            - name: Build client
+              working-directory: Hub/src/WebAPI/Client
+              run: npm run build
+
+            - name: Set up .NET
+              uses: actions/setup-dotnet@v3
+              with:
+                dotnet-version: '8.0.x'
+            
+            - name: Restore .NET dependencies
+              run: dotnet restore Hub/src/WebAPI/WebAPI.csproj
+
+            - name: Publish .NET project
+              run: dotnet publish Hub/src/WebAPI/WebAPI.csproj -c Release -r linux-arm64
+
+            - name: Zip files
+              run: |
+                zip -r garden-automation-release.zip Hub/src/WebAPI/bin/Release/net8.0/linux-arm64/publish
+                zip -ur garden-automation-release.zip Hub/src/WebAPI/Client/dist
+
+            - name: Upload release assets
+              uses: actions/upload-artifact@v4
+              with:
+                name: garden-automation-release
+                path: garden-automation-release.zip
+    
+    release:
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: garden-automation-release
+                path: .
+
+            - name: Create GitHub Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: ${{ github.ref }}
+                release_name: Release ${{ github.ref }}
+                draft: false
+                prerelease: false
+
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: ./garden-automation-release.zip
+                asset_name: garden-automation-release.zip
+                asset_content_type: application/zip
