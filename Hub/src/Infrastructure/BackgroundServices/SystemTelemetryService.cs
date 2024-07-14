@@ -40,8 +40,8 @@ namespace Infrastructure.BackgroundServices
             {
                 var jsonData = File.ReadAllText(_systemSettingsFile);
                 var settings = JsonConvert.DeserializeObject<SystemSettings>(jsonData);
-                
-                if(settings is null)
+
+                if (settings is null)
                 {
                     _systemSettings = new SystemSettings();
                     Task.Run(WriteToFile);
@@ -73,25 +73,6 @@ namespace Infrastructure.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //ping hello to cloud
-            using (HttpClient client = new HttpClient())
-            {
-                // Create the content to send
-                var content = new StringContent($"{{\"id\": \"{_systemSettings.SystemId}\"}}", Encoding.UTF8, "application/json");
-
-                // Send the POST request
-                HttpResponseMessage response = await client.PostAsync("https://prod2-30.swedencentral.logic.azure.com:443/workflows/16b684ed651c49ba8c7a7d68464579c6/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=dqAXri6qabaOFJAIiS1ThY3J1tPu3QqfvjSAE5-j63g", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    Debug.WriteLine("Message sent successfully!");
-                }
-                else
-                {
-                    Debug.WriteLine($"Failed to send message. Status code: {response.StatusCode}");
-                }
-            }
-
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
     }
