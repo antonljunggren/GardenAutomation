@@ -60,7 +60,7 @@ namespace Infrastructure.Shared
             {
                 var settings = await _systemRepository.GetSettingsAsync();
 
-                if (string.IsNullOrWhiteSpace(settings.SystemId))
+                if (string.IsNullOrWhiteSpace(settings.SystemId) || !settings.ConnectToCloud)
                 {
                     return;
                 }
@@ -98,7 +98,7 @@ namespace Infrastructure.Shared
             {
                 var settings = await _systemRepository.GetSettingsAsync();
 
-                if (string.IsNullOrWhiteSpace(settings.SystemId))
+                if (string.IsNullOrWhiteSpace(settings.SystemId) || !settings.ConnectToCloud)
                 {
                     return;
                 }

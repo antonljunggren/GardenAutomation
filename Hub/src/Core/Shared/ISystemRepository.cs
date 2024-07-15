@@ -9,5 +9,6 @@ namespace Core.Shared
     public interface ISystemRepository
     {
         Task<SystemSettings> GetSettingsAsync();
+        Task UpdateSettings(SystemSettings newSettings);
     }
 }

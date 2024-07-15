@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 
 namespace Core.Shared
 {
-    public class SystemSettings
+    public class SystemSettings : ICloneable
     {
         public string SystemId { get; set; } = "";
+        public bool ConnectToCloud { get; set; } = true;
 
+        public object Clone()
+        {
+            return new SystemSettings
+            {
+                SystemId = SystemId,
+                ConnectToCloud = ConnectToCloud,
+            };
+        }
     }
 }

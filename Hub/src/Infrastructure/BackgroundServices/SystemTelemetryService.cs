@@ -35,6 +35,9 @@ namespace Infrastructure.BackgroundServices
             //Send telemetry data regularly
             //or maybe just send it in the application layer, like when data from sensors come in...??
 
+            //Update to get new props to file
+            await _systemRepository.UpdateSettings(await _systemRepository.GetSettingsAsync());
+
             await Task.Delay(15000, stoppingToken);
             Debug.WriteLine("Starting background task to send telemetry data");
 
