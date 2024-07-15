@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Core.Devices.Device;
 
 namespace Infrastructure.Shared
 {
@@ -18,13 +19,20 @@ namespace Infrastructure.Shared
             public string SystemId { get; set; }
             public T Details { get; set; }
             public string Type { get; }
+            public DeviceType DeviceType { get; }
+            public string DeviceName { get; }
+            public uint DeviceUniqueId { get; }
 
-            public TelemetryMessage(T details, string systemId)
+
+            public TelemetryMessage(T details, string systemId, DeviceType deviceType, string deviceName, uint deviceUniqueId)
             {
                 Details = details;
                 SystemId = systemId;
 
                 Type = typeof(T).Name;
+                DeviceType = deviceType;
+                DeviceName = deviceName;
+                DeviceUniqueId = deviceUniqueId;
             }
         }
 
@@ -46,7 +54,7 @@ namespace Infrastructure.Shared
             _systemRepository = systemRepository;
         }
 
-        public async Task SendDeviceState(string state)
+        public async Task SendDeviceState(string state, Device device)
         {
             try
             {
@@ -59,7 +67,7 @@ namespace Infrastructure.Shared
 
                 var stateObj = new DeviceStateTel(state);
 
-                var msg = new TelemetryMessage<DeviceStateTel>(stateObj, settings.SystemId);
+                var msg = new TelemetryMessage<DeviceStateTel>(stateObj, settings.SystemId, device.Type, device.DeviceName, device.UniqueId);
                 var msgJson = JsonConvert.SerializeObject(msg);
 
                 using (var httpClient = new HttpClient())
@@ -84,7 +92,7 @@ namespace Infrastructure.Shared
 
         }
 
-        public async Task SendMeasuredData(MeasuredDataPoint dataPoint)
+        public async Task SendMeasuredData(MeasuredDataPoint dataPoint, Device device)
         {
             try
             {
@@ -95,7 +103,7 @@ namespace Infrastructure.Shared
                     return;
                 }
 
-                var msg = new TelemetryMessage<MeasuredDataPoint>(dataPoint, settings.SystemId);
+                var msg = new TelemetryMessage<MeasuredDataPoint>(dataPoint, settings.SystemId, device.Type, device.DeviceName, device.UniqueId);
                 var msgJson = JsonConvert.SerializeObject(msg);
 
                 using (var httpClient = new HttpClient())

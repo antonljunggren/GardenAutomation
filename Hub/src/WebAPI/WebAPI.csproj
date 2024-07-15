@@ -13,6 +13,12 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<!-- Makes the TypeScript compilation task a no-op -->
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	</PropertyGroup>
+
+
 	<ItemGroup>
 		<Content Include="Client\dist\**\*.*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

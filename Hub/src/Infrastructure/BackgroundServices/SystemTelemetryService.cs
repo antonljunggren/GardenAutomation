@@ -51,7 +51,7 @@ namespace Infrastructure.BackgroundServices
                         {
                             foreach(var dataPoint in sensor.LastMeasuredDataPoints)
                             {
-                                await _telemetryService.SendMeasuredData(dataPoint);
+                                await _telemetryService.SendMeasuredData(dataPoint, sensor);
                             }
                         }
                     }
@@ -62,7 +62,7 @@ namespace Infrastructure.BackgroundServices
                         {
                             foreach (var dataPoint in device.LastMeasuredDataPoints)
                             {
-                                await _telemetryService.SendMeasuredData(dataPoint);
+                                await _telemetryService.SendMeasuredData(dataPoint, device);
                             }
                         }
                     }
