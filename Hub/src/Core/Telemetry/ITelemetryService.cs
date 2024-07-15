@@ -10,6 +10,6 @@ namespace Core.Telemetry
     public interface ITelemetryService
     {
         Task SendMeasuredData(MeasuredDataPoint dataPoint, Device device);
-        Task SendDeviceState(string state, Device device);
+        Task SendDeviceState(Device device);
     }
 }

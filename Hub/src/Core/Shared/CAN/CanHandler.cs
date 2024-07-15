@@ -10,6 +10,7 @@ using Core.Devices;
 using static Core.Devices.Device;
 using Core.Shared.Commands;
 using System.Diagnostics;
+using Core.Telemetry;
 
 namespace Core.Shared.CAN
 {
@@ -19,12 +20,15 @@ namespace Core.Shared.CAN
         private readonly IControlDeviceRepository _controlDeviceRepository;
         private readonly ICommandDispatcher _commandDispatcher;
 
-        protected CanHandler(ICanService canService, IControlDeviceRepository controlDeviceRepository, ICommandDispatcher commandDispatcher)
+        private readonly ITelemetryService _telemetryService;
+
+        protected CanHandler(ICanService canService, IControlDeviceRepository controlDeviceRepository, ICommandDispatcher commandDispatcher, ITelemetryService telemetryService)
         {
             _canService = canService;
             _controlDeviceRepository = controlDeviceRepository;
             canService.CanMessageReceived += CanMessageReceived;
             _commandDispatcher = commandDispatcher;
+            _telemetryService = telemetryService;
         }
 
         protected abstract void CanMessageReceived(object? sender, CanMessage msg);
@@ -86,6 +90,7 @@ namespace Core.Shared.CAN
                     }
 
                     pump.SetIsPumping(togglePump);
+                    await _telemetryService.SendDeviceState(pump);
 
                     await _controlDeviceRepository.UpdateDevice(pump);
                 }

@@ -38,9 +38,9 @@ namespace Infrastructure.Shared
 
         private class DeviceStateTel
         {
-            public string State { get; set; }
+            public uint State { get; set; }
 
-            public DeviceStateTel(string state)
+            public DeviceStateTel(uint state)
             {
                 State = state;
             }
@@ -54,7 +54,7 @@ namespace Infrastructure.Shared
             _systemRepository = systemRepository;
         }
 
-        public async Task SendDeviceState(string state, Device device)
+        public async Task SendDeviceState(Device device)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Infrastructure.Shared
                     return;
                 }
 
-                var stateObj = new DeviceStateTel(state);
+                var stateObj = new DeviceStateTel(device.State);
 
                 var msg = new TelemetryMessage<DeviceStateTel>(stateObj, settings.SystemId, device.Type, device.DeviceName, device.UniqueId);
                 var msgJson = JsonConvert.SerializeObject(msg);
