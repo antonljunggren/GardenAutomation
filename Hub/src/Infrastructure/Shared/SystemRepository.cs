@@ -54,7 +54,7 @@ namespace Infrastructure.Shared
 
         public Task<SystemSettings> GetSettingsAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_systemSettings);
         }
     }
 }
