@@ -2,6 +2,7 @@
 using Core.Devices.ControlDevices.WaterPump;
 using Core.Shared.CAN;
 using Core.Shared.Commands;
+using Core.Telemetry;
 using Infrastructure.Devices;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Infrastructure.CAN
 {
     internal sealed class CanHandlerImplmentation : CanHandler
     {
-        public CanHandlerImplmentation(ICanService canService, IControlDeviceRepository controlDeviceRepository, ICommandDispatcher commandDispatcher) : base(canService, controlDeviceRepository, commandDispatcher)
+        public CanHandlerImplmentation(ICanService canService, IControlDeviceRepository controlDeviceRepository, ICommandDispatcher commandDispatcher, ITelemetryService telemetryService) : base(canService, controlDeviceRepository, commandDispatcher, telemetryService)
         {
         }
 
