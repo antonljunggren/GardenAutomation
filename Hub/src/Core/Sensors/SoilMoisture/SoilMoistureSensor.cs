@@ -29,7 +29,7 @@ namespace Core.Sensors.SoilMoisture
             DataPointType dataPointType;
             if (dataSource == (byte)DataSources.Primary)
             {
-                dataPointType = DataPointType.Temperature;
+                dataPointType = DataPointType.SoilMoisture;
 
                 const int minInput = 240;
                 const int maxInput = 675;
