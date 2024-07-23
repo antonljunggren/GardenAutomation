@@ -1,5 +1,5 @@
-﻿using Core.Devices.ControlDevices;
-using Core.Devices.ControlDevices.WaterPump;
+﻿using Core.ControlDevices;
+using Core.ControlDevices.WaterPump;
 using Core.Devices.Shared.Commands;
 using Core.Sensors;
 using Core.Sensors.SoilMoisture;

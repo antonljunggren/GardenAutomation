@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Devices;
 
-namespace Core.Devices.ControlDevices
+namespace Core.ControlDevices
 {
     public abstract class ControlDevice : Device
     {

@@ -1,5 +1,5 @@
 ﻿using Core.Devices;
-using Core.Devices.ControlDevices.WaterPump;
+using Core.ControlDevices.WaterPump;
 using Core.Shared.CAN;
 using System;
 using System.Collections.Generic;
@@ -65,8 +65,8 @@ namespace Infrastructure.CAN
             var data = new byte[5];
             var uniqueIdArr = BitConverter.GetBytes(device.UniqueId);
 
-            
-            for(int i = 0; i < 4; i++)
+
+            for (int i = 0; i < 4; i++)
             {
                 data[i] = uniqueIdArr[i];
             }
@@ -98,13 +98,13 @@ namespace Infrastructure.CAN
 
                 case CanMessageType.Data:
                     var dataDev = _devices.Single(d => d.DeviceId == canMessage.DeviceID);
-                    if(dataDev.DeviceType == DeviceType.TemperatureSensor)
+                    if (dataDev.DeviceType == DeviceType.TemperatureSensor)
                     {
                         var temperatureMsg = new CanMessage(CanMessageType.Data, dataDev.DeviceId, BitConverter.GetBytes(2653));
                         CanMessageReceived?.Invoke(null, temperatureMsg);
                     }
 
-                    if(dataDev.DeviceType == DeviceType.SoilMoistureSensor)
+                    if (dataDev.DeviceType == DeviceType.SoilMoistureSensor)
                     {
                         var soilMoistureMsg = new CanMessage(CanMessageType.Data, dataDev.DeviceId, BitConverter.GetBytes(512));
                         CanMessageReceived?.Invoke(null, soilMoistureMsg);
@@ -122,9 +122,9 @@ namespace Infrastructure.CAN
                     var cmdType = (WaterPumpDevice.CommandTypes)canMessage.Data[0];
                     var cmdVal = canMessage.Data[1];
 
-                    if(cmdDev.DeviceType == DeviceType.WaterPumpDevice)
+                    if (cmdDev.DeviceType == DeviceType.WaterPumpDevice)
                     {
-                        if(cmdType == WaterPumpDevice.CommandTypes.ToggleWaterPump)
+                        if (cmdType == WaterPumpDevice.CommandTypes.ToggleWaterPump)
                         {
                             cmdDev.State = cmdVal;
                             var waterPumpStateMsg = new CanMessage(CanMessageType.DeviceState, cmdDev.DeviceId, [cmdVal]);

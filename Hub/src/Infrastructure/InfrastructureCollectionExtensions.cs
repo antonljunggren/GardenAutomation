@@ -9,12 +9,12 @@ using Infrastructure.Commands;
 using Core.Shared.Queries;
 using Core.Shared.Commands;
 using Core.Sensors;
-using Core.Devices.ControlDevices;
 using Core.Shared.CAN;
 using Infrastructure.BackgroundServices;
 using Core.Shared;
 using Infrastructure.Shared;
 using Core.Telemetry;
+using Core.ControlDevices;
 
 namespace Infrastructure
 {

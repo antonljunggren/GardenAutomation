@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Core.Devices.ControlDevices.WaterPump.Commands.CalibrateWaterLevelCommand;
+using static Core.ControlDevices.WaterPump.Commands.CalibrateWaterLevelCommand;
 
-namespace Core.Devices.ControlDevices.WaterPump.Commands
+namespace Core.ControlDevices.WaterPump.Commands
 {
     public sealed record CalibrateWaterLevelCommand(byte DeviceId, WaterLevelCalibrationType levelType) : ICommand
     {

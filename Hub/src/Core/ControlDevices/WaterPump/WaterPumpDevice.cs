@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.ControlDevices;
+using Core.Devices;
 using static Core.Devices.MeasuredDataPoint;
 
-namespace Core.Devices.ControlDevices.WaterPump
+namespace Core.ControlDevices.WaterPump
 {
     public sealed class WaterPumpDevice : ControlDevice
     {
@@ -35,17 +37,17 @@ namespace Core.Devices.ControlDevices.WaterPump
             {
                 SetState(ControlDeviceState.Idle);
             }
-            
+
         }
 
         protected override MeasuredDataPoint HandleDataSource(int value, byte dataSource)
         {
             DataPointType dataPointType;
-            if(dataSource == (byte)DataSources.WaterLevel)
+            if (dataSource == (byte)DataSources.WaterLevel)
             {
                 dataPointType = DataPointType.WaterLevel;
 
-                float decimalValue = ((float)value / 1023f) * 100.0f;
+                float decimalValue = value / 1023f * 100.0f;
 
                 return new MeasuredDataPoint(dataPointType, decimalValue, DateTime.UtcNow);
             }

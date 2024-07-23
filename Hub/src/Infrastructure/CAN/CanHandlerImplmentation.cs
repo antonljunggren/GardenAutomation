@@ -1,5 +1,5 @@
-﻿using Core.Devices.ControlDevices;
-using Core.Devices.ControlDevices.WaterPump;
+﻿using Core.ControlDevices;
+using Core.ControlDevices.WaterPump;
 using Core.Shared.CAN;
 using Core.Shared.Commands;
 using Core.Telemetry;
@@ -34,7 +34,7 @@ namespace Infrastructure.CAN
                 Task.Run(() => HandleDeviceState(msg));
             }
 
-            if(msg.MessageType == CanMessageType.Data)
+            if (msg.MessageType == CanMessageType.Data)
             {
                 Task.Run(() => HandleMeasurementData(msg));
             }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Devices.ControlDevices.WaterPump.Commands
+namespace Core.ControlDevices.WaterPump.Commands
 {
     public sealed record ToggleWaterPumpCommand(byte DeviceId, bool TurnOn) : ICommand
     {

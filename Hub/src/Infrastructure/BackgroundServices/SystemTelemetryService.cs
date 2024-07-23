@@ -10,7 +10,7 @@ using System.Diagnostics;
 using Core.Shared;
 using Core.Telemetry;
 using Core.Sensors;
-using Core.Devices.ControlDevices;
+using Core.ControlDevices;
 
 namespace Infrastructure.BackgroundServices
 {
@@ -43,16 +43,16 @@ namespace Infrastructure.BackgroundServices
 
             try
             {
-                while(!stoppingToken.IsCancellationRequested)
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     var sensors = await _sensorRepository.GetAll();
                     var devices = await _controlDeviceRepository.GetAll();
 
-                    foreach(var sensor in sensors)
+                    foreach (var sensor in sensors)
                     {
-                        if(sensor.LastMeasuredDataPoints.Count > 0)
+                        if (sensor.LastMeasuredDataPoints.Count > 0)
                         {
-                            foreach(var dataPoint in sensor.LastMeasuredDataPoints)
+                            foreach (var dataPoint in sensor.LastMeasuredDataPoints)
                             {
                                 await _telemetryService.SendMeasuredData(dataPoint, sensor);
                             }

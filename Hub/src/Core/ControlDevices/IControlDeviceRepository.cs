@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Devices.ControlDevices
+namespace Core.ControlDevices
 {
     public interface IControlDeviceRepository
     {

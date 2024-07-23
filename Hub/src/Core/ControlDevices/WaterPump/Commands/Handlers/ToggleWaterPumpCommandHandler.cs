@@ -1,4 +1,8 @@
-﻿using Core.Shared.CAN;
+﻿using Core.ControlDevices;
+using Core.ControlDevices.WaterPump;
+using Core.ControlDevices.WaterPump.Commands;
+using Core.Devices;
+using Core.Shared.CAN;
 using Core.Shared.Commands;
 using System;
 using System.Collections.Generic;
@@ -6,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Devices.ControlDevices.WaterPump.Commands.Handlers
+namespace Core.ControlDevices.WaterPump.Commands.Handlers
 {
     public sealed class ToggleWaterPumpCommandHandler : ICommandHandler<ToggleWaterPumpCommand, NoResult>
     {
@@ -23,14 +27,14 @@ namespace Core.Devices.ControlDevices.WaterPump.Commands.Handlers
         {
             var device = await _controlDeviceRepository.GetByDeviceId(command.DeviceId);
 
-            if(device.Type != Device.DeviceType.WaterPumpDevice)
+            if (device.Type != Device.DeviceType.WaterPumpDevice)
             {
                 throw new Exception($"Wrong device type for command: {device.Type}");
             }
 
             var pump = device as WaterPumpDevice;
 
-            if(pump is null)
+            if (pump is null)
             {
                 throw new Exception("Cannot cast to Water Pump");
             }

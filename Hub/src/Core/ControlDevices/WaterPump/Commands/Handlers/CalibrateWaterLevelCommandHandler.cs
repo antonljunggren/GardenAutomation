@@ -1,4 +1,6 @@
-﻿using Core.Shared.CAN;
+﻿using Core.ControlDevices;
+using Core.ControlDevices.WaterPump.Commands;
+using Core.Shared.CAN;
 using Core.Shared.Commands;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Devices.ControlDevices.WaterPump.Commands.Handlers
+namespace Core.ControlDevices.WaterPump.Commands.Handlers
 {
     public sealed class CalibrateWaterLevelCommandHandler : ICommandHandler<CalibrateWaterLevelCommand, NoResult>
     {
@@ -25,12 +27,12 @@ namespace Core.Devices.ControlDevices.WaterPump.Commands.Handlers
 
             byte cmdType = (byte)CalibrateWaterLevelCommand.WaterLevelCalibrationType.LowLevel;
 
-            if(command.levelType == CalibrateWaterLevelCommand.WaterLevelCalibrationType.MaxLevel)
+            if (command.levelType == CalibrateWaterLevelCommand.WaterLevelCalibrationType.MaxLevel)
             {
                 cmdType = (byte)CalibrateWaterLevelCommand.WaterLevelCalibrationType.MaxLevel;
             }
 
-            var canMsg = new CanMessage(CanMessageType.Command, command.DeviceId, [cmdType, (byte)0]);
+            var canMsg = new CanMessage(CanMessageType.Command, command.DeviceId, [cmdType, 0]);
 
             _canService.SendCanMessage(canMsg);
 

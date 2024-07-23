@@ -1,6 +1,4 @@
-﻿using Core.Devices.ControlDevices.WaterPump;
-using Core.Devices.ControlDevices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +9,8 @@ using static Core.Devices.Device;
 using Core.Shared.Commands;
 using System.Diagnostics;
 using Core.Telemetry;
+using Core.ControlDevices;
+using Core.ControlDevices.WaterPump;
 
 namespace Core.Shared.CAN
 {

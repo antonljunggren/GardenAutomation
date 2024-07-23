@@ -1,6 +1,5 @@
 ﻿using Core.Devices;
-using Core.Devices.ControlDevices;
-using Core.Devices.ControlDevices.WaterPump;
+using Core.ControlDevices.WaterPump;
 using Core.Sensors;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -10,8 +9,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Core.Devices.ControlDevices.ControlDevice;
+using static Core.ControlDevices.ControlDevice;
 using System.Diagnostics;
+using Core.ControlDevices;
 
 namespace Infrastructure.Devices
 {

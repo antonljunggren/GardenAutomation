@@ -1,5 +1,5 @@
-﻿using Core.Devices;
-using Core.Devices.ControlDevices;
+﻿using Core.ControlDevices;
+using Core.Devices;
 using Core.Devices.Shared.Queries;
 using Core.Sensors;
 using Core.Shared.Queries;

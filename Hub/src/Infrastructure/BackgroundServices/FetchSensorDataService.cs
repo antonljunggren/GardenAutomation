@@ -1,4 +1,4 @@
-﻿using Core.Devices.ControlDevices;
+﻿using Core.ControlDevices;
 using Core.Sensors;
 using Core.Shared.CAN;
 using Microsoft.Extensions.Hosting;

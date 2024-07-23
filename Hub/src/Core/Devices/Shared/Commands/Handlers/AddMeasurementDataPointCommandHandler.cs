@@ -1,4 +1,4 @@
-﻿using Core.Devices.ControlDevices;
+﻿using Core.ControlDevices;
 using Core.Devices.Shared.Commands;
 using Core.Sensors;
 using Core.Shared.Commands;

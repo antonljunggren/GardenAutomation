@@ -1,5 +1,5 @@
-﻿using Core.Devices;
-using Core.Devices.ControlDevices.WaterPump.Commands;
+﻿using Core.ControlDevices.WaterPump.Commands;
+using Core.Devices;
 using Core.Devices.Shared.Commands;
 using Core.Devices.Shared.Queries;
 using Core.Shared.CAN;
