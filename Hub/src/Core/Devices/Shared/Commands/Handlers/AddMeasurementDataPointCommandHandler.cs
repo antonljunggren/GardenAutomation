@@ -24,30 +24,39 @@ namespace Core.Devices.Shared.Commands.Handlers
 
         public async Task<NoResult> Handle(AddMeasurementDataPointCommand command, CancellationToken cancellationToken)
         {
-            try
-            {
-                var sensor = await _sensorRepository.GetByDeviceId(command.DeviceId);
-                sensor.AddMeasurementDataPoint(command.Value, command.DataSource);
-                await _sensorRepository.UpdateSensor(sensor);
+            var sensorExists = await _sensorRepository.SensorExists(command.DeviceId);
+            var deviceExists = await _controlDeviceRepository.DeviceExists(command.DeviceId);
 
-                return new NoResult();
-            }
-            catch (Exception ex)
+            if(sensorExists)
             {
-                Debug.WriteLine(ex.ToString());
+                try
+                {
+                    var sensor = await _sensorRepository.GetByDeviceId(command.DeviceId);
+                    sensor.AddMeasurementDataPoint(command.Value, command.DataSource);
+                    await _sensorRepository.UpdateSensor(sensor);
+
+                    return new NoResult();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
             }
 
-            try
+            if (deviceExists)
             {
-                var device = await _controlDeviceRepository.GetByDeviceId(command.DeviceId);
-                device.AddMeasurementDataPoint(command.Value, command.DataSource);
-                await _controlDeviceRepository.UpdateDevice(device);
+                try
+                {
+                    var device = await _controlDeviceRepository.GetByDeviceId(command.DeviceId);
+                    device.AddMeasurementDataPoint(command.Value, command.DataSource);
+                    await _controlDeviceRepository.UpdateDevice(device);
 
-                return new NoResult();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
+                    return new NoResult();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
             }
 
             throw new Exception($"No device exists: {command.DeviceId}");

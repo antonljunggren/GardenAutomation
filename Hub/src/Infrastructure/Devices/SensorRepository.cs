@@ -119,5 +119,10 @@ namespace Infrastructure.Devices
             await WriteToFile();
             return sensor;
         }
+
+        public Task<bool> SensorExists(byte devideId)
+        {
+            return Task.FromResult(_sensors.Any(s => s.DeviceId == devideId));
+        }
     }
 }

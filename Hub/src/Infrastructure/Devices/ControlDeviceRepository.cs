@@ -113,5 +113,10 @@ namespace Infrastructure.Devices
             await WriteToFile();
             return device;
         }
+
+        public Task<bool> DeviceExists(byte devideId)
+        {
+            return Task.FromResult(_devices.Any(d => d.DeviceId == devideId));
+        }
     }
 }

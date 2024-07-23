@@ -10,6 +10,7 @@ namespace Core.Sensors
     public interface ISensorRepository
     {
         Task<List<SensorDevice>> GetAll();
+        Task<bool> SensorExists(byte devideId);
         Task<SensorDevice> GetByDeviceId(byte deviceId);
         Task<SensorDevice> GetByUniqueId(uint uniqueId);
         Task<SensorDevice> UpdateSensor(SensorDevice sensor);
