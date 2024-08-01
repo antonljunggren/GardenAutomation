@@ -11,6 +11,9 @@
 
 #define DATA_WATER_LEVEL 0
 
+#define NUMSAMPLES 10
+int samples[NUMSAMPLES];
+
 const int water_level_low_offset_address = 0;
 const int water_level_max_offset_address = sizeof(int);
 
@@ -25,6 +28,8 @@ void readFromEEPROM(int &low_offset, int &max_offset) {
 
 bool is_pumping = false;
 
+int lowOffset, maxOffset;
+
 void setup()
 {
     pinMode(WATER_PUMP_PIN, OUTPUT);
@@ -32,10 +37,13 @@ void setup()
     pinMode(WATER_LEVEL_STOP, INPUT_PULLUP);
 
     digitalWrite(WATER_PUMP_PIN, LOW);
+    delay(100);
 
     init_sensor(DEVICE_TYPE_WATER_PUMP, dataReceived);
 
     digitalWrite(WATER_PUMP_PIN, LOW);
+
+    readFromEEPROM(lowOffset, maxOffset);
 }
 
 void loop()
@@ -74,10 +82,12 @@ void dataReceived(CAN_Message msg)
         else if(commandType == SET_LOW_OFFSET_CMD) {
             int currentLevel = analogRead(analogInputToDigitalPin(WATER_LEVEL));
             EEPROM.put(water_level_low_offset_address, currentLevel);
+            lowOffset = currentLevel;
         }
         else if(commandType == SET_MAX_OFFSET_CMD) {
             int currentLevel = analogRead(analogInputToDigitalPin(WATER_LEVEL));
             EEPROM.put(water_level_max_offset_address, currentLevel);
+            maxOffset = currentLevel;
         }
     }
     else if(msg.messageType == MSG_TYPE_DATA) {
@@ -93,18 +103,29 @@ void dataReceived(CAN_Message msg)
 
 int getWaterLevel()
 {
-    int rawValue = analogRead(analogInputToDigitalPin(WATER_LEVEL));
-    int lowOffset, maxOffset;
+    uint8_t i;
+    int average;
 
-    readFromEEPROM(lowOffset, maxOffset);
+    for (i = 0; i < NUMSAMPLES; i++)
+    {
+        samples[i] = analogRead(analogInputToDigitalPin(WATER_LEVEL));
+        delay(20);
+    }
 
-    if(rawValue < lowOffset) {
+    average = 0;
+    for (i = 0; i < NUMSAMPLES; i++)
+    {
+        average += samples[i];
+    }
+    average /= NUMSAMPLES;
+
+    if(average < lowOffset) {
         return 0;
     }
 
-    if(rawValue > maxOffset) {
+    if(average > maxOffset) {
         return 1023;
     }
 
-    return (rawValue - lowOffset) * 1023L / (maxOffset - lowOffset);
+    return (average - lowOffset) * 1023L / (maxOffset - lowOffset);
 }
