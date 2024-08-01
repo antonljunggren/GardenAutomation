@@ -18,12 +18,32 @@ namespace Infrastructure.Devices
     internal sealed class SensorRepository : ISensorRepository
     {
         private List<SensorDevice> _sensors = new List<SensorDevice>();
-        private readonly string _dataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "sensors.json");
+        private readonly string _dataFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "GardenAutomationData", "sensors.json");
         private static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public SensorRepository()
         {
-            if(File.Exists(_dataFilePath))
+            var oldFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "sensors.json");
+
+            //TODO: Remove some time after release, wen deployed devices have hopefully updated
+
+            if (File.Exists(oldFilePath))
+            {
+                var dir = Path.GetDirectoryName(_dataFilePath);
+                if (dir is not null && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                File.Move(oldFilePath, _dataFilePath);
+
+                if (File.Exists(oldFilePath))
+                {
+                    File.Delete(oldFilePath);
+                }
+            }
+
+            if (File.Exists(_dataFilePath))
             {
                 var jsonData = File.ReadAllText(_dataFilePath);
                 var sensorsJson = JsonConvert.DeserializeObject<JObject[]>(jsonData);

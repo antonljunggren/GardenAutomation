@@ -18,11 +18,31 @@ namespace Infrastructure.Devices
     internal sealed class ControlDeviceRepository : IControlDeviceRepository
     {
         private List<ControlDevice> _devices = new List<ControlDevice>();
-        private readonly string _dataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "control-devices.json");
+        private readonly string _dataFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "GardenAutomationData", "control-devices.json");
         private static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public ControlDeviceRepository()
         {
+            var oldFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "control-devices.json");
+
+            //TODO: Remove some time after release, wen deployed devices have hopefully updated
+
+            if (File.Exists(oldFilePath))
+            {
+                var dir = Path.GetDirectoryName(_dataFilePath);
+                if (dir is not null && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                File.Move(oldFilePath, _dataFilePath);
+
+                if (File.Exists(oldFilePath))
+                {
+                    File.Delete(oldFilePath);
+                }
+            }
+
             if (File.Exists(_dataFilePath))
             {
                 var jsonData = File.ReadAllText(_dataFilePath);

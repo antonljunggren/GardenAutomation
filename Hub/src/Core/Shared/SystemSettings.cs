@@ -9,7 +9,7 @@ namespace Core.Shared
     public class SystemSettings : ICloneable
     {
         public string SystemId { get; set; } = "";
-        public bool ConnectToCloud { get; set; } = true;
+        public bool ConnectToCloud { get; set; } = false;
 
         public object Clone()
         {
