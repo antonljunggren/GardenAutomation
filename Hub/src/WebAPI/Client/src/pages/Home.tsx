@@ -94,7 +94,7 @@ const Home: Component = () => {
 
     const timer = setInterval(() => {
         refetch();
-    }, 5000);
+    }, 15000);
 
     onCleanup(() => clearInterval(timer));
 
@@ -112,7 +112,7 @@ const Home: Component = () => {
                 </Match>
                 <Match when={devices()}>
 
-                    <div class="grid grid-flow-row grid-cols-1 md:grid-cols-4 2xl:grid-cols-6">
+                    <div class="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6">
                         <For each={devices()}>
                             {(device: Device, index) =>
                                 <div class={"border border-gray-200" + (device.type === DeviceType.WaterPumpDevice ? " md:row-span-2 md:col-span-2" : "")}>
