@@ -23,6 +23,7 @@ export const dict = {
     runTask10Min: "Kör i 10 minuter",
     runTask30Min: "Kör i 30 minuter",
     runTask60Min: "Kör i 60 minuter",
+    until: "tills",
 
 
     hello: i18n.template<{ name: string }>("hej {{ name }}, hur mår du?"),

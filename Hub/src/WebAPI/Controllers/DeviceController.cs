@@ -1,7 +1,11 @@
-﻿using Core.ControlDevices.WaterPump.Commands;
+﻿using Core.ControlDevices;
+using Core.ControlDevices.Queries;
+using Core.ControlDevices.WaterPump.Commands;
 using Core.Devices;
 using Core.Devices.Shared.Commands;
 using Core.Devices.Shared.Queries;
+using Core.Sensors;
+using Core.Sensors.Queries;
 using Core.Shared.CAN;
 using Core.Shared.Commands;
 using Core.Shared.Queries;
@@ -32,6 +36,20 @@ namespace WebAPI.Controllers
         {
             var query = new GetAllDevicesQuery();
             return await _queryDispatcher.Dispatch<GetAllDevicesQuery, List<Device>>(query, CancellationToken.None);
+        }
+
+        [HttpGet("sensors")]
+        public async Task<IEnumerable<SensorDevice>> GetAllSensors()
+        {
+            var query = new GetAllSensorsQuery();
+            return await _queryDispatcher.Dispatch<GetAllSensorsQuery, List<SensorDevice>>(query, CancellationToken.None);
+        }
+
+        [HttpGet("devices")]
+        public async Task<IEnumerable<ControlDevice>> GetAllControlDevices()
+        {
+            var query = new GetAllControlDevicesQuery();
+            return await _queryDispatcher.Dispatch<GetAllControlDevicesQuery, List<ControlDevice>>(query, CancellationToken.None);
         }
 
         [HttpPost("{deviceId}/name/{name}")]

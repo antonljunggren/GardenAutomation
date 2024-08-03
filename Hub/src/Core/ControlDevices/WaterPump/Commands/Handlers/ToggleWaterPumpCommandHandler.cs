@@ -2,6 +2,7 @@
 using Core.ControlDevices.WaterPump;
 using Core.ControlDevices.WaterPump.Commands;
 using Core.Devices;
+using Core.Shared;
 using Core.Shared.CAN;
 using Core.Shared.Commands;
 using System;
@@ -16,11 +17,13 @@ namespace Core.ControlDevices.WaterPump.Commands.Handlers
     {
         private readonly IControlDeviceRepository _controlDeviceRepository;
         private readonly ICanService _canService;
+        private readonly ISystemRepository _systemRepository;
 
-        public ToggleWaterPumpCommandHandler(IControlDeviceRepository controlDeviceRepository, ICanService canService)
+        public ToggleWaterPumpCommandHandler(IControlDeviceRepository controlDeviceRepository, ICanService canService, ISystemRepository systemRepository)
         {
             _controlDeviceRepository = controlDeviceRepository;
             _canService = canService;
+            _systemRepository = systemRepository;
         }
 
         public async Task<NoResult> Handle(ToggleWaterPumpCommand command, CancellationToken cancellationToken)
@@ -48,6 +51,27 @@ namespace Core.ControlDevices.WaterPump.Commands.Handlers
             if(!command.TurnOn)
             {
                 pump.ClearActionDurationStopTime();
+                var system = await _systemRepository.GetSettingsAsync();
+
+                system.ScheduledCommands.RemoveAll(s =>
+                {
+                    var cmdType = s.CommandType;
+
+                    if(cmdType == typeof(ToggleWaterPumpCommand))
+                    {
+                        var deviceId = Byte.Parse(s.Args[0].ToString()!);
+                        var turnOnVal = Boolean.Parse(s.Args[1].ToString()!);
+
+                        if(deviceId == pump.DeviceId && !turnOnVal)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
+
+                await _systemRepository.UpdateSettings(system);
             }
 
             await _controlDeviceRepository.UpdateDevice(pump);

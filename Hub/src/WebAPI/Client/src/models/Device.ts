@@ -35,5 +35,6 @@ export type Device = {
     deviceId: number;
     deviceName: string;
     state: number;
+    actionDurationStopTime: Date | null;
     lastMeasuredDataPoints: MeasuredDataPoint[];
 }

@@ -14,8 +14,19 @@ const Home: Component = () => {
     const port = import.meta.env.VITE_PORT === undefined ? 8080 : import.meta.env.VITE_PORT;
 
     let initialLoad = false;
+    const fetchSensors = async () => {
+        let devices = (await fetch(`http://${hostname}:${port}/api/device/sensors`, {
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': hostname
+            }
+        })).json();
+        initialLoad = true;
+        return devices;
+    }
+
     const fetchDevices = async () => {
-        let devices = (await fetch(`http://${hostname}:${port}/api/device`, {
+        let devices = (await fetch(`http://${hostname}:${port}/api/device/devices`, {
             mode: 'cors',
             headers: {
                 'Access-Control-Allow-Origin': hostname
@@ -27,7 +38,8 @@ const Home: Component = () => {
 
     const { createNotification } = useNotification();
     const { locale, changeLocale, t } = useLocalization();
-    const [devices, { mutate, refetch }] = createResource(fetchDevices);
+    const [sensors, { refetch: refetchSensors }] = createResource(fetchSensors);
+    const [controlDevices, { refetch: refetchControlDevices }] = createResource(fetchDevices);
 
     const [isEditDialogOpen, setEditDialogOpen] = createSignal(false);
     const [editDevice, setEditDevice] = createSignal<Device | null>(null);
@@ -40,7 +52,7 @@ const Home: Component = () => {
                 'Access-Control-Allow-Origin': hostname
             }
         }).then(() => {
-            refetch();
+            refetchControlDevices();
             createNotification('success', t("deviceUpdateMessage"));
         }).catch(() => {
             createNotification('error', t("errorMessage"));
@@ -55,7 +67,7 @@ const Home: Component = () => {
                 'Access-Control-Allow-Origin': hostname
             }
         }).then(() => {
-            refetch();
+            refetchControlDevices();
             createNotification('success', t("deviceUpdateMessage"));
         }).catch(() => {
             createNotification('error', t("errorMessage"));
@@ -70,7 +82,7 @@ const Home: Component = () => {
                 'Access-Control-Allow-Origin': hostname
             }
         }).then(() => {
-            refetch();
+            refetchControlDevices();
             createNotification('success', t("deviceUpdateMessage"));
         }).catch(() => {
             createNotification('error', t("errorMessage"));
@@ -85,7 +97,8 @@ const Home: Component = () => {
                 'Access-Control-Allow-Origin': hostname
             }
         }).then(() => {
-            refetch();
+            refetchControlDevices();
+            refetchSensors();
             createNotification('success', t("dataRefreshedMessage"));
         }).catch(() => {
             createNotification('error', t("errorMessage"));
@@ -100,7 +113,8 @@ const Home: Component = () => {
                 'Access-Control-Allow-Origin': hostname
             }
         }).then(() => {
-            refetch();
+            refetchControlDevices();
+            refetchSensors();
             createNotification('success', t("deviceUpdateMessage"));
         }).catch(() => {
             createNotification('error', t("errorMessage"));
@@ -108,20 +122,42 @@ const Home: Component = () => {
     }
 
     const timer = setInterval(() => {
-        refetch();
+        refetchControlDevices();
+        refetchSensors();
     }, 15000);
 
     onCleanup(() => clearInterval(timer));
+
+    const devices = () => {
+        let deviceList: Device[] = [];
+        const sensorsCopy = [...sensors() ?? []];
+        const controlDevicesCopy = [...controlDevices() ?? []];
+
+        while (sensorsCopy.length > 0 || controlDevicesCopy.length > 0) {
+            if (sensorsCopy.length >= 2) {
+                deviceList.push(sensorsCopy.shift());
+                deviceList.push(sensorsCopy.shift());
+            } else if (sensorsCopy.length > 0) {
+                deviceList.push(sensorsCopy.shift());
+            }
+
+            if (controlDevicesCopy.length > 0) {
+                deviceList.push(controlDevicesCopy.shift());
+            }
+        }
+
+        return deviceList;
+    }
 
     return (
         <div>
             <h1 class=" text-2xl mb-4">{t("dashboard")}</h1>
 
             <Switch>
-                <Match when={devices.loading && !initialLoad}>
+                <Match when={(sensors.loading || controlDevices.loading) && !initialLoad}>
                     <Loading />
                 </Match>
-                <Match when={devices.error}>
+                <Match when={sensors.error || controlDevices.error}>
                     <p>Error</p>
                     <Loading />
                 </Match>

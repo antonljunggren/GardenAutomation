@@ -109,11 +109,15 @@ const DeviceCard: Component<DeviceCardProps> = (props) => {
                                 <p class="my-auto text-2xl">{device.lastMeasuredDataPoints.length > 0 ? device.lastMeasuredDataPoints[0].value.toFixed(0).toString() : "N/A"}%</p>
                             </div>
                             <div class="block sm:flex gap-4">
-                                <p class="my-auto text-2xl">{props.t("status")}: {props.t(getStatus())}</p>
+                                <p class="my-auto text-2xl">
+                                    {props.t("status")}: {props.t(getStatus())} {device.actionDurationStopTime && (`${props.t("until")} ${new Date(device.actionDurationStopTime).toLocaleTimeString()}`)}
+                                </p>
+
                                 <Show when={device.state === ControlDeviceState.PrimaryActionRunning}>
                                     <button class=" w-32 h-16 text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold my-4 py-2 px-4 rounded"
                                         onclick={() => props.requestPumpState(device.deviceId, false)}>Stop</button>
                                 </Show>
+
                                 <Show when={device.state === ControlDeviceState.Idle}>
                                     <div class="flex relative">
                                         <button class="w-32 h-16 text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold my-4 py-2 px-4 rounded-l"
