@@ -18,6 +18,7 @@ namespace Core.ControlDevices
 
         public ControlDeviceState DeviceState { get; private set; }
         public override uint State => (uint)DeviceState;
+        public DateTime? ActionDurationStopTime { get; private set; }
 
         protected ControlDevice(DeviceType type, byte deviceId, uint uniqueId, string deviceName) : base(type, deviceId, uniqueId, deviceName)
         {
@@ -32,6 +33,21 @@ namespace Core.ControlDevices
         public void SetIsWaitingForResponse()
         {
             DeviceState = ControlDeviceState.WaitingForResponse;
+        }
+
+        public void SetActionDurationStopTime(DateTime stopTime)
+        {
+            if(stopTime < DateTime.UtcNow)
+            {
+                throw new ArgumentException("Action stop time cannot be in the past!");
+            }
+
+            ActionDurationStopTime = stopTime;
+        }
+
+        public void ClearActionDurationStopTime()
+        {
+            ActionDurationStopTime = null;
         }
     }
 }

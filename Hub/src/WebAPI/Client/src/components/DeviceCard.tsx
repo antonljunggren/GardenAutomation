@@ -13,6 +13,7 @@ import editIcon from '../assets/edit-icon.svg'
 type DeviceCardProps = {
     device: Device;
     t: any;
+    requestPumpScheduledState: (deviceId: number, minutes: number) => void;
     requestPumpState: (deviceId: number, turnOn: boolean) => void;
     onEdit: (device: Device) => void;
     refreshData: (device: Device) => void;
@@ -36,6 +37,7 @@ const DeviceCard: Component<DeviceCardProps> = (props) => {
     const device = props.device;
 
     const [waterLevelIcons, setWaterLevelIcons] = createSignal<string[]>([]);
+    const [openPumpActions, setOpenPumpActions] = createSignal(false);
 
     onMount(async () => {
         const waterLevelIconsImport = [];
@@ -113,8 +115,44 @@ const DeviceCard: Component<DeviceCardProps> = (props) => {
                                         onclick={() => props.requestPumpState(device.deviceId, false)}>Stop</button>
                                 </Show>
                                 <Show when={device.state === ControlDeviceState.Idle}>
-                                    <button class=" w-32 h-16 text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold my-4 py-2 px-4 rounded"
-                                        onclick={() => props.requestPumpState(device.deviceId, true)}>Start</button>
+                                    <div class="flex relative">
+                                        <button class="w-32 h-16 text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold my-4 py-2 px-4 rounded-l"
+                                            onclick={() => props.requestPumpState(device.deviceId, true)}>Start</button>
+
+                                        <button class="w-8 text-white h-16 my-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-r"
+                                            type="button"
+                                            onClick={() => setOpenPumpActions(!openPumpActions())}>
+                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                            </svg>
+                                        </button>
+
+                                        {openPumpActions() && (
+                                            <div class="w-40 absolute left-0 top-20 border bg-white border-blue-700">
+                                                <ul class="py-2 text-md text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                                    <li>
+                                                        <button class="px-4 py-2 hover:bg-gray-100"
+                                                            onclick={() => props.requestPumpScheduledState(device.deviceId, 10)}>
+                                                            {props.t("runTask10Min")}
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="px-4 py-2 hover:bg-gray-100"
+                                                            onclick={() => props.requestPumpScheduledState(device.deviceId, 30)}>
+                                                            {props.t("runTask30Min")}
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="px-4 py-2 hover:bg-gray-100"
+                                                            onclick={() => props.requestPumpScheduledState(device.deviceId, 60)}>
+                                                            {props.t("runTask60Min")}
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+
                                 </Show>
                             </div>
                         </div>

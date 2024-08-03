@@ -52,6 +52,15 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("waterpump/{deviceId}/schedule/duration/{minutes}")]
+        public async Task<IActionResult> TrySetWaterPumpPumpingDuration(byte deviceId, int minutes)
+        {
+            var cmd = new ScheduleWaterPumpDurationCommand(deviceId, minutes);
+            await _commandDispatcher.Dispatch<ScheduleWaterPumpDurationCommand, NoResult>(cmd, CancellationToken.None);
+
+            return Ok();
+        }
+
         [HttpPost("waterpump/{deviceId}/calibrate/{levelType}")]
         public async Task<IActionResult> CalibrateWaterLevel(byte deviceId, CalibrateWaterLevelCommand.WaterLevelCalibrationType levelType)
         {

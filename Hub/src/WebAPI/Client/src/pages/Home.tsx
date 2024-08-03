@@ -47,6 +47,21 @@ const Home: Component = () => {
         });
     }
 
+    const requestPumpScheduledState = async (deviceId: number, minutes: number) => {
+        await fetch(`http://${hostname}:${port}/api/device/waterpump/${deviceId}/schedule/duration/${minutes}`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': hostname
+            }
+        }).then(() => {
+            refetch();
+            createNotification('success', t("deviceUpdateMessage"));
+        }).catch(() => {
+            createNotification('error', t("errorMessage"));
+        });
+    }
+
     const calibrateWaterLevel = async (deviceId: number, levelType: number) => {
         await fetch(`http://${hostname}:${port}/api/device/waterpump/${deviceId}/calibrate/${levelType}`, {
             method: 'POST',
@@ -116,7 +131,9 @@ const Home: Component = () => {
                         <For each={devices()}>
                             {(device: Device, index) =>
                                 <div class={"border border-gray-200" + (device.type === DeviceType.WaterPumpDevice ? " md:row-span-2 md:col-span-2" : "")}>
-                                    <DeviceCard device={device} t={t} requestPumpState={requestPumpState}
+                                    <DeviceCard device={device} t={t}
+                                        requestPumpState={requestPumpState}
+                                        requestPumpScheduledState={requestPumpScheduledState}
                                         onEdit={(device) => {
                                             setEditDevice(device);
                                             setEditDialogOpen(true);

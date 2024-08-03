@@ -44,6 +44,12 @@ namespace Core.ControlDevices.WaterPump.Commands.Handlers
             _canService.SendCanMessage(toggleCanMsg);
 
             pump.SetIsWaitingForResponse();
+
+            if(!command.TurnOn)
+            {
+                pump.ClearActionDurationStopTime();
+            }
+
             await _controlDeviceRepository.UpdateDevice(pump);
 
             //delay to hopefully get updated state when client fetches data after this response

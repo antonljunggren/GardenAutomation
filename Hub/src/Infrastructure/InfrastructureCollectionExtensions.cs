@@ -39,6 +39,7 @@ namespace Infrastructure
         {
             services.AddHostedService<FetchSensorDataService>();
             services.AddHostedService<SystemTelemetryService>();
+            services.AddHostedService<SystemSchedulingService>();
 #if !DEBUG
             services.AddHostedService<LcdScreenService>();
             services.AddHostedService<CoolingFanControlService>();

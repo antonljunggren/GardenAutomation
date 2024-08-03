@@ -20,6 +20,9 @@ export const dict = {
     errorMessage: "något fick fel",
     dataRefreshedMessage: "enhetsdata har laddats om",
     deviceUpdateMessage: "enhet har uppdaterats",
+    runTask10Min: "Kör i 10 minuter",
+    runTask30Min: "Kör i 30 minuter",
+    runTask60Min: "Kör i 60 minuter",
 
 
     hello: i18n.template<{ name: string }>("hej {{ name }}, hur mår du?"),

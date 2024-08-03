@@ -20,6 +20,9 @@ export const dict = {
     errorMessage: "something went wrong",
     dataRefreshedMessage: "device data was refreshed",
     deviceUpdateMessage: "device was updated",
+    runTask10Min: "Run for 10 minutes",
+    runTask30Min: "Run for 30 minutes",
+    runTask60Min: "Run for 60 minutes",
 
     hello: i18n.template<{ name: string }>("hello {{ name }}, how are you?"),
     goodbye: ({ name }: { name: string }) => `goodbye ${name}`,
